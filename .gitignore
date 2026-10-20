@@ -1,0 +1,12 @@
+# audio never goes in git: sources live in src/, renders are attached to GitHub Releases (see renders/README.md)
+src/
+work/
+out/
+*.wav
+*.mp3
+*.flac
+*.aiff
+*.npy
+__pycache__/
+*.pyc
+.DS_Store

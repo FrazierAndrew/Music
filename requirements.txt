@@ -1,0 +1,5 @@
+# Python (tested on 3.13 with numpy 2.5.3, scipy 1.18.1, matplotlib 3.11.2)
+numpy>=1.26
+scipy>=1.11
+matplotlib>=3.8
+# System: ffmpeg built with librubberband (time-stretch / pitch-shift filter) and libmp3lame (tested on ffmpeg 6.1.1)
