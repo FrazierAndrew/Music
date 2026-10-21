@@ -24,6 +24,8 @@ Standing preferences for everything this repo makes. Sources: a date means he sa
 - "Nostalgic and sad but in a euphoric ambient sense" means contrast, space and atmosphere, not loudness.
   (earlier chats)
 - Interested in underground and fringe EDM. (earlier chats)
+- The goal: music he is "absolutely obsessed over", made by him, Claude and tooling on his MacBook.
+  (2026-10-20)
 
 ## Direction so far (data points, not rules yet)
 
@@ -57,8 +59,11 @@ bloom, shimmer and a long tail (earlier chats). All of these exist in `engine/` 
   reactions and pairwise comparisons (from his own taste-dataset work, earlier chats). This repo follows
   that: `renders/README.md` keeps every render and `feedback-log.md` every reaction.
 
+- Asked for a long multi-part job one piece at a time, so finished pieces survive usage limits.
+  (2026-10-20, once)
+
 ## Unknown, ask when it matters
 
 - What the music is for (listening, DJ sets, release): changes length, intro/outro shape and loudness.
 - Whether he wants vocals (his own, or more of the vocoded "ghost" voice).
-- How he hears the ambient remix (pending).
+- How he hears Glass Tide, Aurora and Undertow (pending), and what made the first seven garbage.

@@ -1,54 +1,53 @@
-# music-generator
+# Music
 
-Andrew and Claude's music generator. No DAW and no AI music generator: Python (numpy, scipy, matplotlib) and
-ffmpeg turn a source track into finished, mastered remixes. The repo answers two questions, and it will grow
-around them:
+Andrew and Claude's music generator: the repository Claude reads before making music with Andrew. It answers
+two questions and grows around them:
 
-1. **How Andrew hears music** → [`taste/`](taste/): what he likes and dislikes, with dated evidence from his
-   own reactions to renders.
-2. **What we do to make it** → [`craft/`](craft/) (methods, tools, style engines, checks), with the code in
-   [`engine/`](engine/) and one file per remix in [`recipes/`](recipes/).
+1. **How Andrew hears music** → [`taste/`](taste/): his stated preferences and every reaction to every render.
+2. **What Claude does to make it** → [`craft/`](craft/): methods, engines, checks and research, with the code
+   in [`engine/`](engine/) and one file per remix in [`recipes/`](recipes/).
 
-When asked to make music, Claude starts with [`CLAUDE.md`](CLAUDE.md): it is the operating manual for going
-from a request to a delivered, verified render with this repo.
+Electronic music only. No DAW and no cloud music generator: Python (numpy, scipy), ffmpeg and onnxruntime turn
+a source track into finished, mastered remixes. The goal is music Andrew is obsessed with; the plan for
+getting there is in [`ROADMAP.md`](ROADMAP.md).
+
+## Status (2026-10-21)
+
+- Ten renders of two source tracks. Andrew judged the first seven garbage. Three newer ones (resonance,
+  spectral and sampler engines built on neural stems) are waiting for his reaction.
+- Next: move the system to Andrew's MacBook (real plugins, samples, better separation) and build a fast A/B
+  listening loop.
 
 ## Layout
 
 | Path | What it is |
 |---|---|
-| [`CLAUDE.md`](CLAUDE.md) | Operating manual: workflow, conventions, checklists, pitfalls |
-| [`taste/`](taste/) | `profile.md` (standing preferences) and `feedback-log.md` (every reaction, dated) |
-| [`craft/`](craft/) | `pipeline.md`, `toolkit.md`, `styles.md`, `verification.md`, `research/` |
-| [`engine/`](engine/) | Shared code: separation, analysis, beat grids, synthesis, effects, mixing, mastering, rendering |
-| [`recipes/<track>/`](recipes/) | One Python file per remix: which source bars go where, which layers play, mix targets |
-| [`tracks/<track>/`](tracks/) | Facts about each source track: analysis data and plot, harmony, what makes it special |
-| [`renders/`](renders/) | Catalog of every render (settings, loudness, feedback); the audio is attached to GitHub Releases |
+| [`CLAUDE.md`](CLAUDE.md) | Claude's operating manual: read first |
+| [`ROADMAP.md`](ROADMAP.md) | Why the first system failed, what to keep, the next steps, what Andrew can contribute |
+| [`taste/`](taste/) | `profile.md` (standing preferences) and `feedback-log.md` (every request and reaction, dated) |
+| [`craft/`](craft/) | `pipeline.md` (render stages), `engines.md` (every engine and how it landed), `toolkit.md` (code reference), `verification.md` (checks and lessons), `research/` |
+| [`engine/`](engine/) | Shared code: separation, analysis, synthesis, effects, mixing, mastering, rendering |
+| [`recipes/<track>/`](recipes/) | One Python file per remix, plus the track's harmony map, stem prep and `run.sh` |
+| [`tracks/<track>/`](tracks/) | Analysis data and a fact sheet per source track |
+| [`renders/`](renders/) | Catalog of every render: settings, timestamps, reactions |
+| [`tools/`](tools/) | `fetch_models.sh` (stem-separation models) |
 
-Audio is never committed. Source tracks go in `src/` (gitignored); renders are uploaded as Release assets and
-listed in [`renders/README.md`](renders/README.md).
-
-## Quick start
+## Quick start (macOS or Linux)
 
 ```
-pip install -r requirements.txt            # and ffmpeg built with librubberband + libmp3lame
+pip install -r requirements.txt        # numpy, scipy, matplotlib, onnxruntime
+ffmpeg -filters | grep rubberband      # ffmpeg needs librubberband (and libmp3lame for MP3s)
+bash tools/fetch_models.sh             # stem models into models/ (about 110 MB, not in git)
 mkdir -p src && cp /path/to/ddd2.wav src/ddd2.wav
-bash recipes/ddd2/run.sh src/ddd2.wav ddd2_flume ddd2_flume_ambient
+bash recipes/ddd2/run.sh               # separation, analysis, stem prep, then the three newest remixes
 ```
 
-Outputs land in `out/`: `<TAG>.wav` (24-bit), `<TAG>.mp3` (320k), `<TAG>_check.png` (loudness arc +
-spectrogram), and the printed checks. Large intermediates (separated layers, stems) go to `work/`
-(override with `REMIX_WORK=/some/path`).
+Each render writes `out/<TAG>.wav` (24-bit), `out/<TAG>.mp3` (320k), `out/<TAG>_check.png` and prints its
+checks. Large intermediates go to `work/` (or `$REMIX_WORK`).
 
-## Catalog so far
+## Audio
 
-| Track | Remix | Style | Feedback |
-|---|---|---|---|
-| 2_5 | `2_5_remix` | progressive re-edit, new drums and rolling bass | none yet |
-| ddd2 (tame gentle) | `ddd2_remix_A_tidal` | melodic techno | "just drum / beat changes" (set A/B/C) |
-| ddd2 | `ddd2_remix_B_halftime` | halftime future bass | same |
-| ddd2 | `ddd2_remix_C_liquid` | liquid drum and bass, 170 | same |
-| ddd2 | `ddd2_flume_style` | Flume-style sound design | **liked**: "I like the flume one" |
-| ddd2 | `ddd2_odesza_style` | ODESZA-style sound design | not chosen |
-| ddd2 | `ddd2_flume_ambient` | ambient, built from the Flume-style one | pending |
-
-Details, numbers and download links: [`renders/README.md`](renders/README.md).
+This repository is public and Andrew's source tracks are unreleased, so no audio is committed or attached.
+Renders are delivered privately; any of them can be rebuilt bit for bit from the source WAV with its recipe.
+If the repository becomes private, renders can be attached to Releases (see
+[`renders/README.md`](renders/README.md)).

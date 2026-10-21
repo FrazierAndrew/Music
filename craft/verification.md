@@ -76,12 +76,23 @@ Arrangement:
   -25 LUFS hole. Fix: start the ending drone earlier (slow bar 58). The ending then sat near climax level:
   drone high-passed at 140 Hz, cut 5 dB, section gains lowered.
 
+Generation 3 (2026-10-20):
+
+- **Inharmonic resonators** (Glass Tide): glass-bar mode ratios (2.756, 5.404) put 26% of the glass layer's
+  energy on pitch classes the pad wasn't playing, including A against his A#. Fix: octave-only modes
+  (`voices.TUNED`), 3%.
+- **Flat loudness arc** (Aurora, first pass): sustained frozen pads filled every section, so the intro measured
+  -13.5 LUFS, the build equalled the peak, and the breakdown sat only 1.8 dB under it. Fix: a steeper section
+  curve. The climax is now loudest, the breakdown 4.4 dB under the first peak, the intro at -18.3.
+- **Harmony check noise:** harmonics of correct notes count as off-chord energy (a C#'s fifth harmonic is a
+  G#). Before changing notes, measure each layer separately and look at which pitch classes are off.
+
 ## Open items
 
-- **Spotify true peak.** Spotify recommends keeping true peak below -2 dBTP when a master is louder than
-  -14 LUFS integrated (ours are -10.4 to -11.7, ambient -15.2), and normalizes playback to -14 LUFS
-  ([Spotify for Artists](https://support.spotify.com/ca-en/artists/article/loudness-normalization/)). For a
-  master meant for release, use a -2 dBTP ceiling: `master()` takes `ceiling_db` (-1.9 gives -2.0 dBTP after
-  its 0.1 dB margin), but `render.py` does not expose it yet. Existing renders were left as delivered; this
-  needs Andrew's call.
-- **Separation quality.** HPSS leaves bleed between layers. His own stems would make every recipe cleaner.
+- **Spotify true peak.** Applied from `ddd2_glass_tide` on: `MASTER_CEILING = -1.9` gives -2.0 dBTP, Spotify's
+  guidance for masters louder than -14 LUFS
+  ([Spotify for Artists](https://support.spotify.com/ca-en/artists/article/loudness-normalization/)).
+  Earlier renders stay at -1.3 dBTP.
+- **Separation quality.** The ONNX MDX-Net models are about 3 dB SDR behind BS-RoFormer on drums and bass, and
+  his own stems would beat both (`ROADMAP.md`).
+- **No quality signal.** The checks catch defects only; preference has to come from Andrew's A/B choices.

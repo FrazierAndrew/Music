@@ -23,7 +23,9 @@ The first renders were renamed at delivery. From now on: TAG = delivered name = 
 artist-inspired style ends in `_style` (never "(Artist Remix)").
 
 `ddd2/ddd2_harmony.py` is not a recipe: it is the track's harmony map (chords per source bar, voicings,
-chord tones) plus small helpers. `ddd2/run.sh` rebuilds everything for the track from the source WAV.
+chord tones) plus small helpers. `ddd2/ddd2_stems.py` prepares the neural stems for the generation-3 recipes
+(de-pumped pad, kit from his drums). `ddd2/run.sh` rebuilds everything from the source WAV (by default the
+three newest recipes).
 
 Dependency: `ddd2_flume_ambient.py` imports `ddd2_flume.py` (its horn motif and grid) and reads the
 Flume-style stems from `work/`, so render `ddd2_flume` first.
@@ -40,6 +42,7 @@ What `engine/render.py` reads from a recipe module:
 | `MASTER_REGION` | yes | `(bar0, bar1)` of the climax; loudness is targeted there |
 | `main()` | yes | Builds the stems, writes `work/<TAG>_mix.npy` via `Mixer.save()` |
 | `MASTER_TARGET` | no | LUFS over `MASTER_REGION` (default -9.0) |
+| `MASTER_CEILING` | no | Limiter ceiling before its 0.1 dB margin (default -1.2; use -1.9 for -2 dBTP) |
 | `BASS_BARS`, `BASS_STEMS`, `SRC_OF` | no | Bass check: which remix bars, which stems, remix bar to source bar |
 | `CHORD_STEMS`, `HARMONY_REF`, `CHORD_BARS` | no | Harmony check: re-synthesized stems vs reference stems over these bars |
 
@@ -54,7 +57,7 @@ Conventions inside recipes:
 
 ## Starting a new recipe
 
-1. Pick the closest engine in `craft/styles.md` and copy it to `recipes/<t>/<t>_<style>.py`.
+1. Pick the closest engine in `craft/engines.md` and copy it to `recipes/<t>/<t>_<engine>.py`.
 2. Change the header docstring: what the recipe does to the track, in plain words (future sessions read it).
 3. Set `TAG`, the `Session` paths (`tracks/<t>/analysis.json`, `work/<t>_harm.npy`, ...), `stretch`, `seed`.
 4. Rewrite `SECTIONS` from `tracks/<t>/analysis_log.txt`, then the bar sets, `MUTE`, `TARGETS`,
@@ -78,7 +81,7 @@ W = engine.WORK
 TAG = "<t>_<style>"
 SECTIONS = [("intro", 0, 8, 0), ("drop", 8, 16, 20)]
 END = 24
-ses = Session("<t>", "tracks/<t>/analysis.json", f"{W}/<t>_harm.npy", f"{W}/<t>_perc.npy", END + 2, seed=1)
+ses = Session("<t>_stems", "tracks/<t>/analysis.json", f"{W}/<t>_bed_dp.npy", None, END + 2, seed=1)
 MAPPING = [(r0 + i, s0 + i) for _, r0, nb, s0 in SECTIONS for i in range(nb)]
 TARGETS = {"bed": (-16.0, (8, 24)), "kick": (-17.0, (8, 24))}
 MASTER_REGION = (8, 24)

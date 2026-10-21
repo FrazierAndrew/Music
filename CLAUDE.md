@@ -1,92 +1,88 @@
-# CLAUDE.md: operating manual for making music with this repo
+# CLAUDE.md: operating manual
 
-This repo is how Claude makes music for Andrew. `taste/` says what he likes, `craft/` says how we make it,
-`engine/` + `recipes/` do it, `tracks/` and `renders/` record what was done. Read this file first, then the
-files it points to for the task at hand.
+This repo is how Claude makes music for Andrew. `taste/` says how he hears music, `craft/` says how we make
+it, `engine/` and `recipes/` do it, `tracks/` and `renders/` record what was done, `ROADMAP.md` says where it
+goes next. Read this file first, then what it points to.
 
 ## Read before making anything
 
-1. [`taste/profile.md`](taste/profile.md): standing preferences. Non-negotiables are marked.
-2. The latest entries of [`taste/feedback-log.md`](taste/feedback-log.md): what he said about the last renders.
-3. If the request involves an existing track: [`tracks/<track>/README.md`](tracks/) (tempo, key, harmony,
-   what makes it special) and its `analysis_log.txt`.
-4. [`craft/styles.md`](craft/styles.md) to pick the closest existing style engine as a starting point.
+1. [`taste/profile.md`](taste/profile.md): standing preferences.
+2. The latest entries of [`taste/feedback-log.md`](taste/feedback-log.md): his last requests and reactions.
+3. [`ROADMAP.md`](ROADMAP.md): where the system stands and the agreed direction.
+4. For a track: `tracks/<t>/README.md` (facts, structure, what he loves) and its `analysis_log.txt`.
+5. [`craft/engines.md`](craft/engines.md): every engine so far and how he reacted to it.
 
-## Ground rules (from Andrew; see taste/profile.md for sources)
+## Ground rules
 
-- Write with no emojis and no em dashes (in docs, code, commits, messages).
-- Never modify source audio; work on copies (`src/` is input only).
-- Style emulation only: never reproduce another artist's melodies, lyrics, samples or recordings. Name
-  artist-inspired renders `<track>_<artist>_style` (e.g. `ddd2_flume_style`), never "(Artist Remix)".
-- His listening is authoritative. Claude cannot hear audio: say so, rely on the objective checks
-  ([`craft/verification.md`](craft/verification.md)), and ask for timestamped reactions.
-- Remixes must change timbre and texture, not only drums ("way more creative change", 2026-10-19).
-- Avoid audible pumping and flattened, over-limited masters unless a style calls for pump on purpose.
+- No emojis and no em dashes anywhere: docs, code, commits, messages.
+- Electronic music only; lyrics never matter. Vocal-like sounds are texture.
+- Never modify source audio (`src/` is input only). Audio never goes into git: the repo is public.
+- Style emulation only: never reproduce another artist's melodies, samples or recordings. Name
+  artist-inspired renders `<track>_<artist>_style`, never "(Artist Remix)".
+- Claude cannot hear. Say so, rely on the checks ([`craft/verification.md`](craft/verification.md)), label
+  confidence, and never call something good or bad without evidence. His ears decide.
+- Change sound design and texture, not only drums ("way more creative change", 2026-10-19). Keep the track's
+  emotional core; for ddd2 that is the last-drop tidal wave.
+- Write melodies with intent from the track's own chord tones and motifs, never random notes.
+- No pumping or flattening as side effects. The climax is the loudest section; breakdowns sit well below it.
 
 ## Environment
 
-Python 3 with numpy, scipy, matplotlib; ffmpeg with librubberband and libmp3lame. Nothing else: no pip installs
-beyond `requirements.txt`, no DAW, no Suno. Everything is synthesized in code or derived from the source audio.
-Run every command from the repo root.
+Python 3 with numpy, scipy, matplotlib and onnxruntime; ffmpeg with librubberband and libmp3lame. Stem models:
+`bash tools/fetch_models.sh`. Run everything from the repo root; intermediates go to `work/` (`$REMIX_WORK`).
+The current code was built in a cloud sandbox without pip, plugins or sample libraries; on Andrew's Mac those
+limits go away (see `ROADMAP.md`).
 
 ## Workflow: request to delivered render
 
-1. **Clarify only if it changes the build** (style direction, length, which track). Otherwise start and ask
-   alongside the first result.
+1. **Clarify only what changes the build** (track, direction, length). Otherwise start, and ask alongside the
+   first result.
 2. **Set up the track** (once per source):
    ```
    mkdir -p src work tracks/<t> && cp <source> src/<t>.wav
-   python3 engine/separate.py src/<t>.wav work/<t>                       # HPSS: work/<t>_harm.npy, _perc.npy
+   python3 engine/separate.py src/<t>.wav work/<t>          # HPSS layers (the analysis reads these)
    python3 engine/analyze.py src/<t>.wav tracks/<t> work/<t>_harm.npy > tracks/<t>/analysis_log.txt
-   python3 engine/separate_mdx.py src/<t>.wav work/<t>                   # neural stems (use these for remixing)
+   python3 engine/separate_mdx.py src/<t>.wav work/<t>      # neural stems: drums, bass, other, vocals
    ```
-   Neural stems need the four `models/kuielab_b_*.onnx` files (GitHub release `all_public_uvr_models` of
-   TRvlvr/model_repo; gitignored). Then de-pump the pad and recover the kit with `engine/stems.py` (see
-   `recipes/ddd2/ddd2_glass_tide.py` for the calls). Prefer the stems to the HPSS layers: HPSS leaves the
-   original kick and sidechain pumping in the pad.
-   Read `analysis_log.txt` (tempo, grid mode, key, per-bar bass and chroma, sections) and `analysis.png`.
-   Write `tracks/<t>/README.md` with the facts and what makes the track special (see `tracks/ddd2/README.md`).
-   Write a harmony map (see `recipes/ddd2/ddd2_harmony.py`): chord per source bar, voicings, chord tones.
-3. **Choose a style engine** from `craft/styles.md` and copy its recipe to `recipes/<t>/<t>_<style>.py`.
-4. **Write the recipe** (anatomy in [`recipes/README.md`](recipes/README.md)): `SECTIONS` (remix bar →
-   source bar), bar sets for each part, layer functions, `TARGETS` (stem LUFS), `MASTER_REGION`,
-   `MASTER_TARGET`, and the check hooks (`BASS_BARS`, `CHORD_STEMS`, ...).
-5. **Render**: `python3 engine/render.py recipes/<t>/<recipe>.py` → `out/<TAG>.wav/.mp3/_check.png` + checks.
-   Use `--skip-mix` to re-master without rebuilding stems.
-6. **Verify**: read the printed checks against `craft/verification.md` and look at `_check.png` (the loudness
-   arc should match the intended shape; the climax is the loudest section). Fix and re-render until clean.
-7. **Deliver** the MP3 (listening) and WAV (master) with timestamps of the key moments.
-8. **Record**: add a row to `renders/README.md`, attach the audio to a GitHub Release, and log Andrew's
-   reaction in `taste/feedback-log.md` when it comes (promote durable patterns into `taste/profile.md`).
+   Then write `tracks/<t>/README.md`, the harmony map `recipes/<t>/<t>_harmony.py` (chord per source bar,
+   voicings, chord tones) and the stem prep `recipes/<t>/<t>_stems.py` (de-pumped pad and a kit recovered
+   from his drums; copy ddd2's and set the bars and steps from the analysis).
+3. **Choose an engine** from `craft/engines.md` and copy its recipe to `recipes/<t>/<t>_<name>.py`.
+4. **Write the recipe** (anatomy and template: [`recipes/README.md`](recipes/README.md)).
+5. **Render**: `python3 engine/render.py recipes/<t>/<recipe>.py` (`--skip-mix` re-masters only).
+6. **Verify**: read the printed checks and look at `out/<TAG>_check.png`; fix and re-render until clean.
+7. **Deliver** MP3 and WAV, one remix at a time when there are several, each with a short doc: what Claude
+   thinks he will like and won't (tied to his stated preferences), timestamps, questions.
+8. **Record**: a row and a details entry in `renders/README.md`; his request and reaction in
+   `taste/feedback-log.md`, quoted. Promote repeated patterns into `taste/profile.md`.
 
 ## Conventions
 
-- **Grid**: `engine.Session` holds a strict grid. `ses.pos(bar, beat)` gives samples; bars and beats are
-  remix positions. Source bars are placed with `ses.assemble(layer, MAPPING)`. `stretch` time-stretches the
-  source (0.5 = half speed, 1.25 = 136 → 170 BPM) with pitch kept.
-- **Automation**: `ses.auto(default).set(b0, b1, v0, v1, shape)` writes curves in bars. Always `.smooth()`
-  gain curves; always pass cutoff curves through `sd.smooth_curve()` before `fx.tv_filter` (jumps click or
-  spike; see verification.md).
-- **Mixing**: every stem gets a short-term LUFS target over reference bars (`Mixer`). Section dynamics come
-  from a mix-bus `section` curve. FX stems are set by peak.
-- **Mastering**: loudness is targeted over `MASTER_REGION` (the climax), not integrated, so quiet sections keep
-  their contrast. Club styles: -8.5 to -9 LUFS over the climax; ambient: -11.5. Ceiling -1.3 dBTP (for
-  release masters see the Spotify note in verification.md).
-- **Randomness** is seeded everywhere, so a render is reproducible bit for bit from the source WAV.
-- **Naming**: track ids are short (`ddd2`, `2_5`); recipe files `<track>_<style>.py`; `TAG` = the delivered
-  file name = the Release asset name. The first seven renders were renamed at delivery (map in
-  `recipes/README.md`).
+- **Grid**: `engine.Session` is a strict grid. `ses.pos(bar, beat)` gives samples; remix bars (R) are placed
+  from source bars (S, counted from the first downbeat) with `ses.assemble(layer, MAPPING)`; `stretch`
+  changes tempo with pitch kept.
+- **Material**: use the neural stems and the track's prep (`work/<t>_bed_dp.npy`, `work/<t>_kit_*.npy`).
+  The HPSS layers leave the original kick and sidechain pump in the pad (measured 2.6-4.2 dB on ddd2).
+- **Automation**: `ses.auto(default).set(b0, b1, v0, v1, shape)`; `.smooth()` every gain curve and pass every
+  cutoff curve through `sd.smooth_curve()` (jumps click or spike).
+- **Mixing**: `Mixer` calibrates each stem to a LUFS target over reference bars; dynamics come from the
+  mix-bus `section` curve, applied after calibration.
+- **Mastering**: loudness targeted over `MASTER_REGION` (the climax), about -10 to -10.5 LUFS, with
+  `MASTER_CEILING = -1.9` (-2 dBTP, Spotify's guidance for loud masters). Limiter p99 under about 2 dB.
+- **Tonal resonators** use octave-only modes (`voices.TUNED`); inharmonic modes put energy off-chord.
+- **Randomness** is seeded everywhere, so renders reproduce bit for bit.
+- **Naming**: track ids are short (`ddd2`, `2_5`); `TAG` = the delivered file name.
+- **One fact, one place**: render timestamps and numbers live only in `renders/README.md`.
 
 ## Pitfalls already paid for (details in craft/verification.md)
 
-Generated audio drifts in tempo (use the tracked grid); DAW tracks are constant (the analyzer picks this
-automatically). Bass detection is biased by sidechain pumping. Pitch of retriggered notes must be measured
-inside one note. Kick-onset detection fails on time-stretched audio. Cutoff jumps spike block filters. Gain
-steps click. LUFS calibration undoes low-pass "darkening". Chroma correlation flags emphasis, not clashes.
+HPSS bleed and baked-in pumping; tempo drift in generated audio versus constant DAW grids; bass detection
+biased by pumping; kick onsets smeared by time-stretch; cutoff jumps spiking block filters; gain steps
+clicking; LUFS calibration undoing pre-calibration darkening; chroma correlation flagging emphasis instead of
+clashes; inharmonic resonator modes; flat loudness arcs when sustained layers fill every section.
 
 ## Keeping the repo useful
 
-- New durable preference or reaction → `taste/`.
-- New technique, tool, style or lesson → `craft/` (and the code in `engine/`).
-- New source track → `tracks/<t>/`. New remix → `recipes/<t>/` + `renders/README.md` + a Release.
+- New preference or reaction → `taste/`. New technique, engine or lesson → `craft/` (code in `engine/`).
+- New source track → `tracks/<t>/` and `recipes/<t>/`. New render → `renders/README.md`.
 - Keep docs short and factual so the next session can act on them.

@@ -1,7 +1,7 @@
 # Renders
 
-Every render delivered to Andrew, kept even when he passed on it. Audio is attached to GitHub Releases (one
-Release per batch); this file is the catalog. Reactions in full: `taste/feedback-log.md`.
+Every render delivered to Andrew, kept even when he passed on it. This file is the catalog and the only place
+render timestamps and numbers are kept. Reactions in full: `taste/feedback-log.md`.
 
 All masters: 48 kHz, WAV 24-bit and MP3 320k. True peak -1.30 dBTP on the WAV up to `ddd2_flume_ambient`, -2.00 dBTP from `ddd2_glass_tide` on (Spotify's guidance for masters louder than -14 LUFS).
 
@@ -20,12 +20,11 @@ All masters: 48 kHz, WAV 24-bit and MP3 320k. True peak -1.30 dBTP on the WAV up
 | 2026-10-20 | `ddd2_aurora` | `recipes/ddd2/ddd2_aurora.py` | 122, four on the floor | 2:53 | -13.86 | pending |
 | 2026-10-20 | `ddd2_undertow` | `recipes/ddd2/ddd2_undertow.py` | 136, two-step | 2:32 (music ends 2:28) | -12.62 | pending |
 
-Releases:
+## Where the audio is
 
-- [`2026-10-19-first-remixes`](https://github.com/FrazierAndrew/Music/releases/tag/2026-10-19-first-remixes):
-  `2_5_remix`, `ddd2_remix_A_tidal`, `ddd2_remix_B_halftime`, `ddd2_remix_C_liquid`
-- [`2026-10-20-style-engines`](https://github.com/FrazierAndrew/Music/releases/tag/2026-10-20-style-engines):
-  `ddd2_flume_style`, `ddd2_odesza_style`, `ddd2_flume_ambient`
+Not in this repository: it is public and the source tracks are unreleased. Renders were delivered
+privately in chat, and any render can be rebuilt bit for bit from its source WAV (`recipes/<t>/run.sh`).
+If the repository goes private, attach `out/<TAG>.wav` and `.mp3` to Releases named `<date>-<batch>`.
 
 ## Details
 
@@ -68,7 +67,6 @@ LUFS over wave 2.
 1. Render: `python3 engine/render.py recipes/<t>/<recipe>.py` (TAG = the name it will be delivered as).
 2. Add a catalog row and a details entry here: date, recipe, tempo, length, LUFS, section timestamps,
    master settings, anything unusual.
-3. Attach `out/<TAG>.wav` and `out/<TAG>.mp3` to a Release named `<date>-<batch>`:
-   `gh release create <date>-<batch> out/<TAG>.wav out/<TAG>.mp3 --title "..." --notes "..."`
-   (or `gh release upload <tag> <files>` to add to an existing one), and link it above.
+3. Audio: deliver privately. Only if the repository is private, attach `out/<TAG>.wav` and `.mp3` to a
+   Release named `<date>-<batch>` (`gh release create <date>-<batch> out/<TAG>.wav out/<TAG>.mp3`).
 4. When Andrew reacts, fill the Reaction column and log it in `taste/feedback-log.md`.

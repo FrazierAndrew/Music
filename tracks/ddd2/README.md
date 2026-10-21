@@ -54,4 +54,6 @@ point: it lands, then recedes, rather than punching.
 - Every remix so far plays it twice (S100-107 mapped to two consecutive 8-bar sections).
 - Write new melodies from `CHORDS[...]["tones"]` in `ddd2_harmony.py`; re-voice chords from the same map.
 - Use the empty top end (3-12 kHz) for new detail: ticks, rims, breaths, rain, air.
+- Use the neural stems (`engine/separate_mdx.py`, then `recipes/ddd2/ddd2_stems.py`): the HPSS pad carries
+  the old kick and a 2.6-4.2 dB beat pump.
 - Recipes: `recipes/ddd2/`. Renders and reactions: `renders/README.md`, `taste/feedback-log.md`.

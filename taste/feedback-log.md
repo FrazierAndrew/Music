@@ -2,6 +2,8 @@
 
 Every request and reaction, newest last. Quotes are his words (typos fixed). "Read as" is our
 interpretation; "Action" is what changed because of it. Render names match `renders/README.md`.
+One reaction is a data point, not a rule: promote a pattern into `profile.md` when it repeats. Keep what he
+passes over, and ask for timestamps.
 
 Template:
 
@@ -63,3 +65,11 @@ Template:
 - Said: "Take everything you've learned and generate 3 new remixes. Outline what you think I will like and will not like in a document (one for each). [...] Each remix should be from a unique remix engine implementation and have crazy beautiful sound design"
 - Also said: "this will all be electronic music, meaning lyrics don't matter."
 - Action: `ddd2_glass_tide` (resonance), `ddd2_aurora` (spectral), `ddd2_undertow` (sampler), each with a likes/dislikes doc (links in renders/README.md). Reaction: pending.
+
+## 2026-10-21: repository
+
+- Said: "OK, you now should be able to push all of our work so far to this repository. [...] come up with what
+  you think is the best format for this repository to start out with. You don't have to ask me anything just
+  push what you think should go and in the format it should go then let me know."
+- Action: first push to FrazierAndrew/Music: code, docs and analysis, no audio (public repo); docs merged into
+  fewer files, ROADMAP.md added.

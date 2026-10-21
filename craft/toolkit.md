@@ -125,6 +125,8 @@ libmp3lame), `stft`/`istft`/`stft_mag`, `chroma`, `estimate_key`, `sos_filter` (
 | `spectral.py` | `chord_spectrum`, `morph_frames`, `freeze` (random-phase resynthesis), `shift`, `tilt`, `band_gate`, `gate_env`, `spectral_delay` |
 | `sampler.py` | `capture`, `amp_env`, `filter_env`, `repitch` (by playback speed), `reverse`, `normalize` |
 
+Track prep: `recipes/<t>/<t>_stems.py` (ddd2's is the template) writes the de-pumped bed and the kit.
+
 Lesson from Glass Tide: inharmonic modes (`GLASS`, ratio 2.756) put 26% of the layer's energy off-chord;
 octave-only `TUNED` modes brought it to 3%. Use inharmonic modes only for short percussion.
 

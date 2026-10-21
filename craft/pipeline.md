@@ -7,6 +7,7 @@ Everything runs at 48 kHz, float, stereo arrays of shape (2, n). Large intermedi
 src/<t>.wav
   -> engine/separate.py   work/<t>_harm.npy, work/<t>_perc.npy
   -> engine/analyze.py    tracks/<t>/analysis.json, analysis.png, analysis_log.txt
+  -> engine/separate_mdx.py, recipes/<t>/<t>_stems.py   neural stems, de-pumped bed, kit (new remixes)
   -> recipe (engine/render.py runs recipe.main())
        Session: grid + source layers (time-stretched if asked)
        assemble source bars -> layers -> Mixer (LUFS per stem) -> mix-bus edits and section curve
@@ -22,6 +23,15 @@ percussive = median along frequency (31 bins); soft mask with power 2. `perc = i
 layers always sum back to the original. The harmonic layer carries chords, pads and sub; the percussive
 layer carries the original drums and transients. It is DSP separation, not a neural stem model: expect some
 bleed. Real stems from Andrew would be cleaner.
+
+## 1b. Neural stems (the default for new remixes)
+
+`engine/separate_mdx.py` runs the four KUIELab MDX-Net models (ONNX on CPU, at 44.1 kHz) and writes drums,
+bass, other and vocals stems at 48 kHz plus the residual; on ddd2 it took about 2.5 minutes on two cores.
+The track's stem prep (`recipes/<t>/<t>_stems.py`) then builds the bed (other + vocals) with the old
+sidechain dip divided out (`stems.depump`: 3.2-3.4 dB down to 1.1-1.5 dB on ddd2) and recovers one-shots
+from the drum stem (`stems.extract_hit`: onset-aligned medians of 28 hits). The analysis and the older
+recipes still use the HPSS layers.
 
 ## 2. Analyze (`engine/analyze.py`, `engine/beats.py`)
 
@@ -98,12 +108,14 @@ after calibration, or choose reference bars outside the treated region.
 2. Mono below 120 Hz.
 3. Glue compressor: threshold = 95th percentile of 400 ms RMS minus 2.5 dB, ratio 1.8, attack 20 ms,
    release 200 ms, 6 dB knee. Only the densest parts get 1-2 dB.
-4. Input gain, soft clip at 0.85, look-ahead true-peak limiter with ceiling -1.3 dBTP.
+4. Input gain, soft clip at 0.85, look-ahead true-peak limiter at `MASTER_CEILING` minus 0.1 dB (-1.3 dBTP
+   by default, -2.0 dBTP for renders from 2026-10-20 on).
 5. The input gain is iterated until loudness over `MASTER_REGION` (the climax bars) is within 0.05 LU of
    `MASTER_TARGET`. Loudness is targeted on the climax, not integrated, so quiet sections keep their contrast.
 
 Targets so far: club styles -8.5 to -9 LUFS over the climax (about -10.5 to -11.7 integrated); ambient -11.5
-over the climax (-15.2 integrated). The printed report gives glue and limiter gain reduction; limiter p99
+over the climax (-15.2 integrated). Generation 3: -10 to -10.5 over the climax (-12.6 to -13.9
+integrated), so breakdowns keep 4-8 dB of contrast. The printed report gives glue and limiter gain reduction; limiter p99
 above about 2 dB means the climax is being squashed (lower the target or fix the mix).
 
 ## 8. Write and check (`engine/render.py`)
