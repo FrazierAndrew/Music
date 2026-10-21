@@ -15,6 +15,9 @@ that render: the arrangement, which parts play where, the sounds, and the mix ta
 | `ddd2/ddd2_flume.py` | `ddd2_flume` | `ddd2_flume_style` | Flume-style sound design |
 | `ddd2/ddd2_odesza.py` | `ddd2_odesza` | `ddd2_odesza_style` | ODESZA-style sound design |
 | `ddd2/ddd2_flume_ambient.py` | `ddd2_flume_ambient` | `ddd2_flume_ambient` | ambient, from the Flume-style one |
+| `ddd2/ddd2_glass_tide.py` | `ddd2_glass_tide` | same | resonance engine (neural stems) |
+| `ddd2/ddd2_aurora.py` | `ddd2_aurora` | same | spectral engine (neural stems, 122 BPM) |
+| `ddd2/ddd2_undertow.py` | `ddd2_undertow` | same | sampler engine (neural stems, two-step) |
 
 The first renders were renamed at delivery. From now on: TAG = delivered name = Release asset name, and an
 artist-inspired style ends in `_style` (never "(Artist Remix)").

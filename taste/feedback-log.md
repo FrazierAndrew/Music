@@ -52,6 +52,14 @@ Template:
   granular weather) over the ODESZA-style one. One comparison, so not a rule yet.
 - Action: `ddd2_flume_ambient` (same palette at half speed, no drums, paulstretch drones and weather).
 
-## 2026-10-20: ddd2_flume_ambient
+## 2026-10-20: verdict on everything so far
 
-- Reaction: pending.
+- Said: "To be honest the ones you've given me so far are garbage. Clearly, we need a much more advanced system. Go research and tell me what that system can look like. This should just be you, me and tooling that can run on my Macbook." ("tooling" is our reading of a dictated word)
+- Read as: all seven renders fail his bar in absolute terms, including the Flume-style one he preferred; "I like the flume one" was relative.
+- Action: teardown doc (https://claude.ai/artifact/1RFP9BMhi9pekVCxxs7dSm), a research report on a local Mac system, neural stem separation, and three new engines.
+
+## 2026-10-20: request for three new remixes
+
+- Said: "Take everything you've learned and generate 3 new remixes. Outline what you think I will like and will not like in a document (one for each). [...] Each remix should be from a unique remix engine implementation and have crazy beautiful sound design"
+- Also said: "this will all be electronic music, meaning lyrics don't matter."
+- Action: `ddd2_glass_tide` (resonance), `ddd2_aurora` (spectral), `ddd2_undertow` (sampler), each with a likes/dislikes doc (links in renders/README.md). Reaction: pending.

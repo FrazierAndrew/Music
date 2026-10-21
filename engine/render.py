@@ -148,7 +148,8 @@ def main():
     if "--skip-mix" not in sys.argv:
         rec.main()
     mix = np.load(f"{W}/{rec.TAG}_mix.npy")
-    y, rep = master(mix, target, region=rec.ses.span(*rec.MASTER_REGION))
+    y, rep = master(mix, target, ceiling_db=getattr(rec, "MASTER_CEILING", -1.2),
+                    region=rec.ses.span(*rec.MASTER_REGION))
     print(rep)
     out_base = f"out/{rec.TAG}"
     dsp.save(out_base + ".wav", y)

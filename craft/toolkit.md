@@ -114,6 +114,20 @@ libmp3lame), `stft`/`istft`/`stft_mag`, `chroma`, `estimate_key`, `sos_filter` (
 - `master.py`: `master(mix, target_lufs, ceiling_db, region)` returns the master and a gain-reduction report.
 - `render.py`: CLI `render.py recipes/<t>/<recipe>.py [--skip-mix] [--target LUFS]`.
 
+## Added 2026-10-20 (the three new engines)
+
+| Module | What it does |
+|---|---|
+| `separate_mdx.py` | Neural 4-stem separation (KUIELab MDX-Net ONNX models via onnxruntime): drums, bass, other, vocals, plus the residual |
+| `stems.py` | `load`, `depump` (divides out the beat-synchronous sidechain dip), `extract_hit` (clean one-shots: onset-aligned medians of a retriggered drum), `beat_modulation` |
+| `space.py` | `hall_ir` (early reflections, per-band decay, bloom), `convolve`, `send` (band-limited reverb send), `ensemble` (chorus), `width`, `haas` |
+| `voices.py` | `ks_pluck` (Karplus-Strong, exact tuning), `resonate` (modal resonator banks: `TUNED`, `GLASS`, `BELL`, `HARMONIC`), `breath_pad` (additive, drifting partials), `fm_bell` |
+| `spectral.py` | `chord_spectrum`, `morph_frames`, `freeze` (random-phase resynthesis), `shift`, `tilt`, `band_gate`, `gate_env`, `spectral_delay` |
+| `sampler.py` | `capture`, `amp_env`, `filter_env`, `repitch` (by playback speed), `reverse`, `normalize` |
+
+Lesson from Glass Tide: inharmonic modes (`GLASS`, ratio 2.756) put 26% of the layer's energy off-chord;
+octave-only `TUNED` modes brought it to 3%. Use inharmonic modes only for short percussion.
+
 ## Per-track helpers (currently in `recipes/ddd2/ddd2_harmony.py`)
 
 `blocks(chord_by_bar, bars)` (group bars into same-chord blocks), `reverse_bars`, `gate_16ths` (stutter

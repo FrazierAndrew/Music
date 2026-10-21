@@ -2,4 +2,5 @@
 numpy>=1.26
 scipy>=1.11
 matplotlib>=3.8
+onnxruntime>=1.17   # neural stem separation (engine/separate_mdx.py)
 # System: ffmpeg built with librubberband (time-stretch / pitch-shift filter) and libmp3lame (tested on ffmpeg 6.1.1)

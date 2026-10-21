@@ -25,6 +25,15 @@ Two generations so far:
    instruments (from `ddd2_harmony.py`), new melodies from his chord tones, designed textures, and heavy
    transformation of the source. This is the direction to build on.
 
+Third generation (2026-10-20, after the "garbage" verdict on all seven above): neural stems instead of HPSS,
+and one distinct engine per remix.
+
+| Engine (recipe) | Render | Tempo, feel | What makes it | Reaction |
+|---|---|---|---|---|
+| Resonance (`ddd2_glass_tide.py`) | `ddd2_glass_tide` | 136, half-time | Tuned resonators struck in an arpeggio and by his drums; Karplus-Strong motif from his pad's top line; additive pad; choir grains; paulstretch coda | pending |
+| Spectral (`ddd2_aurora.py`) | `ddd2_aurora` | 122, four on the floor | His chords' median spectra frozen and morphing; octave halo; six-band rhythmic gating; spectral-delay cascade motif; one-bar freeze before the wave | pending |
+| Sampler (`ddd2_undertow.py`) | `ddd2_undertow` | 136, two-step | Stabs, octave-up chops and sub notes cut from his own stems; shuffled garage drums; tape slowdowns | pending |
+
 ## Re-arrange and re-drum
 
 **2_5 progressive re-edit** (`recipes/2_5/remix.py`, the first engine, standalone script). Source bars chosen

@@ -27,6 +27,8 @@ Standing preferences for everything this repo makes. Sources: a date means he sa
 
 ## Direction so far (data points, not rules yet)
 
+- All seven renders up to `ddd2_flume_ambient` were "garbage" to him (2026-10-20): the Flume-style preference below was relative, not approval.
+- Electronic only, so lyrics never matter; vocal-like sounds are texture at most. (2026-10-20)
 - Recipes that kept his audio and changed drums and arrangement (ddd2 A/B/C) were not enough. (2026-10-19)
 - Of two style engines he picked the Flume-style one (deconstructed, dirty, wonky, metallic, off-grid) over
   the ODESZA-style one (organic, cinematic, vocal chops, brass), and asked for an ambient version of it.

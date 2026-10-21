@@ -36,9 +36,14 @@ Run every command from the repo root.
 2. **Set up the track** (once per source):
    ```
    mkdir -p src work tracks/<t> && cp <source> src/<t>.wav
-   python3 engine/separate.py src/<t>.wav work/<t>                       # work/<t>_harm.npy, work/<t>_perc.npy
+   python3 engine/separate.py src/<t>.wav work/<t>                       # HPSS: work/<t>_harm.npy, _perc.npy
    python3 engine/analyze.py src/<t>.wav tracks/<t> work/<t>_harm.npy > tracks/<t>/analysis_log.txt
+   python3 engine/separate_mdx.py src/<t>.wav work/<t>                   # neural stems (use these for remixing)
    ```
+   Neural stems need the four `models/kuielab_b_*.onnx` files (GitHub release `all_public_uvr_models` of
+   TRvlvr/model_repo; gitignored). Then de-pump the pad and recover the kit with `engine/stems.py` (see
+   `recipes/ddd2/ddd2_glass_tide.py` for the calls). Prefer the stems to the HPSS layers: HPSS leaves the
+   original kick and sidechain pumping in the pad.
    Read `analysis_log.txt` (tempo, grid mode, key, per-bar bass and chroma, sections) and `analysis.png`.
    Write `tracks/<t>/README.md` with the facts and what makes the track special (see `tracks/ddd2/README.md`).
    Write a harmony map (see `recipes/ddd2/ddd2_harmony.py`): chord per source bar, voicings, chord tones.
